@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Values From Given Text</title>
+    <style>
+        *{
+            margin:0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: rgb(64,210,240);
+            background: linear-gradient(90deg, rgba(64,210,240,1) 0%, rgba(166,17,235,1) 54%, rgba(68,211,240,1) 100%);
+        }
+        #form {
+            width: 550px;
+            margin: 20vh auto 0 auto;
+            background: whitesmoke;
+            border-radius: 5px;
+            padding: 30px;
+        }
+        h1 {
+            text-align: center;
+            color: #9b0bef;
+        }
+        label {
+            margin-right: 30px;
+        }
+        .btn {
+            text-align: center;
+            padding: 8px;
+            background: #9b0bef;
+            color: whitesmoke;
+            border: 2px solid #9b0bef;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+        .input-group textarea {
+            border-radius: 5px;
+            font-size: 18px;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #9b0bef;
+        }
+        .input-group textarea:focus {
+            outline: 0;
+        }
+        .input-group .success textarea {
+            border-color: #036103;
+        }
+        .input-group #error textarea {
+            border-color: red;
+        }
+        .star {
+            color: red;
+        }
+        #error {
+            color: red;
+            display: none
+        }
+    </style>
+</head>
+<body>
+    <div class="container">        
+        <form action="" id="form">
+            <h1>Validation</h1>
+            <div class="input-group">
+                <label for="some_text"> Input Your Text Below: <span class="star">*</span></label>
+                <textarea placeholder="write your text here" id="some_text" cols="50" rows="8"></textarea>
+                <div id="error">Some Text is Required.</div>
+            </div>
+            <div>
+                <input type="button" class="btn" value="Get Email" onclick="getEmail('E')">
+                <input type="button" class="btn" value="Get Name" onclick="getEmail('N')">
+                <input type="button" class="btn" value="Get URL" onclick="getEmail('U')">
+            </div>
+            <!-- <div>
+                <p id="demo"></p>
+            </div> -->
+        </form>
+        
+    </div>
+
+    <script>
+        
+        function getEmail(val){
+            document.getElementById("error").style = 'display: none';
+            var some_text = document.getElementById("some_text").value.trim();
+            var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+            var urlFormat = /^(?:(?:https?|ftp):\/\/)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:\/\S*)?$/;
+
+            var emailList = [];
+            var nameList = [];
+            var urlList = [];
+            var originalUrlList = [];
+            //console.log("******val******",val);
+            if(some_text == ''){
+                document.getElementById("error").style = 'display: block';
+            }
+            else{
+                document.getElementById("error").style = 'display: none';
+                var contentList = some_text.trim().split(/\s+/);
+                //console.log('contentList----------',contentList)
+                for(var i = 0; i<contentList.length; i++){
+                    if(contentList[i] != " " && mailformat.test(contentList[i])){
+                        //console.log('emailList.indexOf(contentList[i])---------',emailList.indexOf(contentList[i]));
+                        if(emailList.indexOf(contentList[i]) == -1){
+                            emailList.push(contentList[i]);
+                            //console.log('emailList-----------',emailList.length);
+                        }
+                    }
+                }
+                
+                if (val == 'E'){
+                    console.log('Email List-----------',emailList);
+                    // for(var i = 0; i<emailList.length; i++){
+                    //     document.getElementById("demo").innerHTML += '\n'+emailList[i]+'\n';
+                    // }
+                }else if(val == 'N'){
+                    for(var i = 0; i < emailList.length; i++){
+                        // console.log('emailList length-----------',emailList[i].split('@')[0].length);
+                        if(emailList[i].split('@')[0].length <= 18){
+                            nameList.push(emailList[i].split('@')[0]);
+                        }
+                        else {
+                            nameList.push(emailList[i].split('@')[0].substr(0,18)+"...");
+                        }
+                    }
+                    console.log('NameList--------',nameList);
+                }
+                else if(val == 'U'){
+                    //console.log('contentList-----------',contentList.length);
+                    for(var i = 0; i < contentList.length; i++){
+                        if(urlFormat.test(contentList[i])){
+                            urlList.push(contentList[i]);
+                        }
+                    }
+                    //console.log('Url List-----------',urlList.length);
+                    for(var i = 0; i < urlList.length; i++){
+                        if(originalUrlList.indexOf(urlList[i]) == -1){
+                            originalUrlList.push(urlList[i]);
+                        }
+                    }
+                    console.log('Url List-----------',originalUrlList);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
